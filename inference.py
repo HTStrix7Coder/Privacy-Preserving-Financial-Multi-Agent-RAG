@@ -78,10 +78,10 @@ def extract_entities(text: str) -> dict | None:
 # ============================================================================
 if __name__ == "__main__":
 
-    # --- Get text from: CLI arg > interactive prompt > built-in sample ---
-    filepath = "/home/harinderan/AI_Projects/Unsloth_Finetuning/GDPR_SLM/dataset_main/safe_corpus/txt/Final_terms/DE000LB1QCB1.pdf.txt"
+    # --- Get text from: CLI arg > built-in sample ---
+    filepath = sys.argv[1] if len(sys.argv) > 1 else None
 
-    if filepath:
+    if filepath and os.path.exists(filepath):
         print(f"\nReading document: {filepath}")
         with open(filepath, "r", encoding="utf-8") as f:
             text = f.read()[:5000]

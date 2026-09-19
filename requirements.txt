@@ -1,0 +1,21 @@
+# ============================================================================
+# GDPR-SLM Core Application & Serving Requirements
+# ============================================================================
+
+# Web Dashboard
+streamlit>=1.35.0
+pandas>=2.0.0
+
+# Multi-Agent & Orchestration
+langgraph>=0.0.60
+mcp>=1.0.0
+
+# Vector Database & Embeddings
+chromadb>=0.4.24
+sentence-transformers>=2.7.0
+
+# Networking & Utilities
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+python-dotenv>=1.0.0
+tqdm>=4.66.0

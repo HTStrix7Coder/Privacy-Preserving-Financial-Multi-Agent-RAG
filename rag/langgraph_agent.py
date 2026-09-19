@@ -39,13 +39,13 @@ logging.basicConfig(
 )
 
 SCRIPT_DIR = Path(__file__).parent
-CHROMA_DB_DIR = str(SCRIPT_DIR / "chroma_db")
-EMBEDDING_MODEL = "intfloat/multilingual-e5-base"
-OLLAMA_URL = "http://localhost:11434"
+CHROMA_DB_DIR = os.getenv("CHROMA_DB_DIR", str(SCRIPT_DIR / "chroma_db"))
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "intfloat/multilingual-e5-base")
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
 
-EXTRACTOR_MODEL = "gdpr-slm-qwen3.5"
-COMPLIANCE_MODEL = "qwen2.5:7b"
-N_RESULTS = 3
+EXTRACTOR_MODEL = os.getenv("EXTRACTOR_MODEL", "gdpr-slm-qwen3.5")
+COMPLIANCE_MODEL = os.getenv("COMPLIANCE_MODEL", "qwen2.5:7b")
+N_RESULTS = int(os.getenv("N_RESULTS", "3"))
 
 # ============================================================================
 # SYSTEM PROMPTS

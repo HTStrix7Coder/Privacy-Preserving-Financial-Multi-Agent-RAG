@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # --------------------------------------------------------------------------
+  # Ollama Local Inference Engine
+  # --------------------------------------------------------------------------
+  ollama:
+    image: ollama/ollama:latest
+    container_name: gdpr-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+      - ./gguf_q8_0_gguf_qwen3.5:/models/gguf
+    restart: unless-stopped
+    # Uncomment deploy section below to enable NVIDIA GPU acceleration in Docker
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+  # --------------------------------------------------------------------------
+  # GDPR-SLM Streamlit Compliance Dashboard & LangGraph Agent
+  # --------------------------------------------------------------------------
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gdpr-compliance-web
+    ports:
+      - "8501:8501"
+    environment:
+      - OLLAMA_URL=http://ollama:11434
+      - CHROMA_DB_DIR=/app/rag/chroma_db
+      - EXTRACTOR_MODEL=gdpr-slm-qwen3.5
+      - COMPLIANCE_MODEL=qwen2.5:7b
+    volumes:
+      - ./rag/chroma_db:/app/rag/chroma_db
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+volumes:
+  ollama_data:

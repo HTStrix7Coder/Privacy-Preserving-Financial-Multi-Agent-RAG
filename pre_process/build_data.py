@@ -3,8 +3,21 @@ import json
 import time
 import google.generativeai as genai
 
+from pathlib import Path
+try:
+    from dotenv import load_dotenv
+    env_path = Path(__file__).resolve().parent.parent / ".env"
+    if env_path.exists():
+        load_dotenv(dotenv_path=env_path)
+except ImportError:
+    pass
+
 # Setup your Teacher Model
-genai.configure(api_key="AIzaSyDkHSPI1e6f23oNFijzctE9U3q9-YQQ9MU") #type: ignore
+api_key = os.getenv("GEMINI_API_KEY")
+if not api_key:
+    raise ValueError("GEMINI_API_KEY environment variable not set. Please set it in .env or your environment.")
+
+genai.configure(api_key=api_key) #type: ignore
 model = genai.GenerativeModel('gemini-2.5-flash') #type: ignore
 
 SYSTEM_PROMPT = "You are a specialized German financial parser. Extract entities into valid JSON."

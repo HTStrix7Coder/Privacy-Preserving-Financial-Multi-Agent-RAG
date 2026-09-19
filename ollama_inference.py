@@ -21,8 +21,8 @@ import requests
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
-OLLAMA_URL = "http://localhost:11434"
-MODEL_NAME = "gdpr-slm-qwen3.5"
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
+MODEL_NAME = os.getenv("EXTRACTOR_MODEL", "gdpr-slm-qwen3.5")
 SYSTEM_PROMPT = "You are a specialized German financial document parser. Extract key entities from financial documents into valid JSON only. Output ONLY raw JSON. No explanations, no markdown, no extra text."
 
 

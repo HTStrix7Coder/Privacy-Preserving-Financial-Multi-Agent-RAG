@@ -1,0 +1,17 @@
+# ============================================================================
+# GDPR-SLM Fine-Tuning & Training Requirements (Unsloth + GPU)
+# ============================================================================
+
+# Core fine-tuning libraries
+unsloth
+torch
+transformers
+trl
+datasets
+peft
+accelerate
+bitsandbytes
+
+# Teacher distillation & preprocessing
+google-generativeai
+python-dotenv

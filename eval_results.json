@@ -1,0 +1,108 @@
+{
+  "timestamp": "2026-09-19 16:11:53 UTC",
+  "extractor_benchmark": {
+    "model": "gdpr-slm-qwen3.5",
+    "sample_count": 25,
+    "average_latency_sec": 2.96,
+    "macro_metrics": {
+      "precision": 0.9525,
+      "recall": 0.9756,
+      "f1": 0.9635
+    },
+    "micro_metrics": {
+      "precision": 0.9537,
+      "recall": 0.9717,
+      "f1": 0.9626
+    },
+    "field_breakdown": {
+      "isin": {
+        "precision": 0.9333,
+        "recall": 1.0,
+        "f1": 0.9655,
+        "support": 14
+      },
+      "issuer": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 25
+      },
+      "currency": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 23
+      },
+      "total_volume": {
+        "precision": 0.9565,
+        "recall": 0.9565,
+        "f1": 0.9565,
+        "support": 23
+      },
+      "denomination": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 16
+      },
+      "issue_date": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 23
+      },
+      "maturity_date": {
+        "precision": 0.875,
+        "recall": 1.0,
+        "f1": 0.9333,
+        "support": 14
+      },
+      "interest_rate_type": {
+        "precision": 0.96,
+        "recall": 1.0,
+        "f1": 0.9796,
+        "support": 24
+      },
+      "document_type": {
+        "precision": 0.96,
+        "recall": 0.96,
+        "f1": 0.96,
+        "support": 25
+      },
+      "instrument_name": {
+        "precision": 0.84,
+        "recall": 0.84,
+        "f1": 0.84,
+        "support": 25
+      }
+    }
+  },
+  "compliance_benchmark": {
+    "model": "qwen2.5:7b",
+    "total_cases": 3,
+    "accuracy": 1.0,
+    "cases": [
+      {
+        "case_name": "Pfandbriefbank AG Fix-to-Float",
+        "expected": "COMPLIANT",
+        "predicted": "COMPLIANT",
+        "correct": true,
+        "latency_sec": 26.11
+      },
+      {
+        "case_name": "Wirecard AG Fraud Anomaly",
+        "expected": "NON-COMPLIANT",
+        "predicted": "NON-COMPLIANT",
+        "correct": true,
+        "latency_sec": 0.31
+      },
+      {
+        "case_name": "Deutsche Bank Tier 2 Subordinated Bail-In",
+        "expected": "REVIEW REQUIRED",
+        "predicted": "REVIEW REQUIRED",
+        "correct": true,
+        "latency_sec": 1.52
+      }
+    ]
+  }
+}

@@ -95,12 +95,52 @@ with st.sidebar:
     
     st.markdown("---")
     st.markdown("### 📄 Dokumenteneingabe")
-    input_method = st.radio("Eingabequelle (Input Source)", ["Text einfügen (Paste)", "Datei hochladen (.txt)"])
+    input_method = st.radio(
+        "Eingabequelle (Input Source)",
+        ["Beispieldokument (1-Click Sample)", "Text einfügen (Paste)", "Datei hochladen (.txt)"]
+    )
+
+    SAMPLE_DOCUMENTS = {
+        "1. Pfandbriefbank AG (Fix-to-Float — Triggers Euribor MCP)": (
+            "ENDGÜLTIGE BEDINGUNGEN vom 15. Oktober 2019.\n"
+            "Emittentin: Deutsche Pfandbriefbank AG, Unterschleißheim.\n"
+            "Wertpapierart: Fix-to-Float Schuldverschreibungen.\n"
+            "ISIN: DE000A2YN3J7. WKN: A2YN3J.\n"
+            "Gesamtnennbetrag: bis zu EUR 150.000.000.\n"
+            "Festgelegte Stückelung: EUR 1.000.\n"
+            "Ausgabetag: 22.10.2019. Rückzahlungstag: 22.10.2029.\n"
+            "Zinsen: Vom 22.10.2019 bis 21.10.2024 mit 0,875% p.a. (Festzinsperiode).\n"
+            "Danach variabel basierend auf 3-Monats-EURIBOR zzgl. 95 Basispunkte p.a.\n"
+            "Rang: nicht nachrangig."
+        ),
+        "2. Commerzbank AG (Senior Preferred — Fixed 3.50%)": (
+            "ENDGÜLTIGE BEDINGUNGEN vom 12. Mai 2024.\n"
+            "Emittentin: Commerzbank AG, Frankfurt am Main.\n"
+            "Wertpapierart: Festverzinsliche Schuldverschreibungen (Fixed Rate Notes).\n"
+            "ISIN: DE000CBK1234. WKN: CBK123.\n"
+            "Gesamtnennbetrag: EUR 500.000.000.\n"
+            "Festgelegte Stückelung: EUR 100.000.\n"
+            "Ausgabetag: 15.05.2024. Rückzahlungstag: 15.05.2029.\n"
+            "Zinssatz: 3,50% p.a. zahlbar jährlich nachträglich.\n"
+            "Rang: Nicht nachrangig (Senior Preferred)."
+        ),
+        "3. Deutsche Bank AG (Subordinated / Tier 2 Bail-in Risk)": (
+            "ENDGÜLTIGE BEDINGUNGEN vom 04. September 2022.\n"
+            "Emittentin: Deutsche Bank AG, Frankfurt am Main.\n"
+            "Wertpapierart: Nachrangige Schuldverschreibungen (Tier 2 Subordinated Notes).\n"
+            "ISIN: DE000DB9XYZ4. WKN: DB9XYZ.\n"
+            "Gesamtnennbetrag: EUR 750.000.000.\n"
+            "Festgelegte Stückelung: EUR 100.000.\n"
+            "Ausgabetag: 10.09.2022. Rückzahlungstag: 10.09.2032.\n"
+            "Zinssatz: 5,25% p.a. bis zum ersten Zinsanpassungstag.\n"
+            "Rang: Nachrangig gemäß § 10 KWG (Bail-in fähig)."
+        )
+    }
 
     st.markdown("---")
     with st.expander("Technische Methodik (Specs)"):
         st.caption("Core Extractor: Qwen3.5-2B (PEFT/LoRA Finetuned)")
-        st.caption("Extraction Accuracy: 1.000 F1-Score (Test Subset)")
+        st.caption("Schema: Strict Financial Entity JSON Output")
         st.caption("Inference Engine: Ollama (Local Streaming API)")
         st.caption("Quantization: 8-bit Symmetric (Q8_0 GGUF)")
         st.caption("Reasoning Engine: Qwen2.5-7B-Instruct")
@@ -113,7 +153,17 @@ with st.sidebar:
 # MAIN APPLICATION BODY
 # ============================================================================
 doc_text = ""
-if "Datei hochladen (.txt)" in input_method:
+if "Beispieldokument" in input_method:
+    selected_sample = st.sidebar.selectbox(
+        "Vordefiniertes Testdokument wählen:",
+        list(SAMPLE_DOCUMENTS.keys())
+    )
+    doc_text = st.sidebar.text_area(
+        "Dokumentenvorschau (Editierbar):",
+        value=SAMPLE_DOCUMENTS[selected_sample],
+        height=280
+    )
+elif "Datei hochladen (.txt)" in input_method:
     uploaded_file = st.sidebar.file_uploader("Upload 'Endgültige Bedingungen' (Final Terms)", type=["txt"])
     if uploaded_file is not None:
         doc_text = uploaded_file.getvalue().decode("utf-8", errors="ignore")
@@ -198,7 +248,7 @@ if st.button("▶ Multi-Agenten-Verifizierungsprozess Starten (Execute Pipeline)
             extracted = final_state["extracted_json"]
             safe_items = [(str(k), str(v) if v is not None else "N/A") for k, v in extracted.items()]
             df = pd.DataFrame(safe_items, columns=["Entity Key", "Identifizierter Wert (Value)"])
-            st.dataframe(df, hide_index=True, width='stretch')
+            st.dataframe(df, hide_index=True, use_container_width=True)
             
         if final_state.get("extraction_error"):
             st.error(f"Fehler (Pipeline Alert): {final_state['extraction_error']}")
